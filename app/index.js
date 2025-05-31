@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { useFonts } from 'expo-font';
-import { IconButton } from 'react-native-paper';
+import { IconButton, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useStateContext } from '../context/StateProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,7 @@ import Weather from '../components/Weather';
 import { getCity } from '../utils/storage'
 import * as Brightness from 'expo-brightness';
 
-const fontColor = "red"
+const mainColor = "red"
 
 const formatDate = (date) => {
   const days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
@@ -34,7 +34,7 @@ export default function App() {
   const [seconds, setSeconds] = useState('--')
   const [toggleDot, setToggleDot] = useState(false)
   const [dateString, setDateString] = useState(formatDate(new Date()))
-  const { selectedCity, setSelectedCity, increaseBrightness, decreaseBrightness } = useStateContext()
+  const { selectedCity, setSelectedCity, mainColor, setMainColor } = useStateContext()
   const [loading, setLoading] = useState(true);
   const [currentForecast, setCurrentForecast] = useState(false)
 
@@ -62,9 +62,9 @@ export default function App() {
     init();
 
 
-    scheduleBrightnessChange(7,25,0.8)
-    scheduleBrightnessChange(8,25,0.5)
-    scheduleBrightnessChange(0,30,0.1)
+    scheduleBrightnessChange(7, 25, 0.8)
+    scheduleBrightnessChange(8, 25, 0.5)
+    scheduleBrightnessChange(0, 30, 0.1)
 
   }, []);
 
@@ -77,7 +77,7 @@ export default function App() {
     const target = new Date();
     target.setHours(hour, minute, 0, 0);
 
-    
+
     if (now > target) {
       target.setDate(target.getDate() + 1);
     }
@@ -153,7 +153,7 @@ export default function App() {
   const changeBrightness = async (delta) => {
     let newBrightness = brightness + delta;
 
-    // Asegurate de que esté entre 0 y 1
+    
     newBrightness = Math.min(1, Math.max(0, newBrightness));
 
     await Brightness.setBrightnessAsync(newBrightness);
@@ -163,6 +163,7 @@ export default function App() {
   useFocusEffect(useCallback(() => {
 
     // push("weather")
+
 
     _fetchCityWeather()
 
@@ -209,14 +210,14 @@ export default function App() {
 
 
 
-
+//change &&
       if (change && date.getHours() === 16 && (date.getMinutes() > 14)) {
         await Brightness.setBrightnessAsync(1)
 
       }
 
     }, 1000);
-    
+
     return () => clearInterval(interval);
   }, []))
 
@@ -234,6 +235,10 @@ export default function App() {
 
       <View style={s.brightnessContainer}>
 
+        {/* <TouchableRipple onPress={() => { changeBrightness(-0.1) }}>
+          <View style={s.brightnessButton}></View>
+        </TouchableRipple> */}
+
         <TouchableNativeFeedback
           onPress={() => { changeBrightness(-0.1) }}
 
@@ -244,22 +249,26 @@ export default function App() {
 
         ><View style={s.brightnessButton}></View></TouchableNativeFeedback>
 
+        {/* <TouchableRipple onPress={() => { changeBrightness(0.1) }}>
+          <View style={s.brightnessButton}></View>
+        </TouchableRipple> */}
+
       </View>
 
 
       <View style={s.topContainer}>
 
         <View style={s.dateContainer}>
-          <IconButton iconColor={fontColor} icon="cog" onPress={() => { push("settings") }} />
-          <Text style={s.dateString}>{dateString}</Text>
+          <IconButton iconColor={mainColor} icon="cog" onPress={() => { push("settings") }} />
+          <Text style={[s.dateString,{color:mainColor,textShadowColor:mainColor}]}>{dateString}</Text>
           <View></View>
         </View>
 
         <View style={s.clock}>
-          <Text style={s.numbers}>{hours}</Text>
-          <Text style={[s.dots, { color: (toggleDot ? fontColor : 'rgb(80, 2, 2)') }]}>:</Text>
-          <Text style={s.numbers}>{minutes}</Text>
-          <Text style={s.seconds}>{seconds}</Text>
+          <Text style={[s.numbers, { color: mainColor, textShadowColor: mainColor }]}>{hours}</Text>
+          <Text style={[s.dots, { color: (toggleDot ? mainColor : '#1c1c1c') }]}>:</Text>
+          <Text style={[s.numbers, { color: mainColor, textShadowColor: mainColor }]}>{minutes}</Text>
+          <Text style={[s.seconds, { color: mainColor, textShadowColor: mainColor }]}>{seconds}</Text>
         </View>
 
       </View>
@@ -269,7 +278,7 @@ export default function App() {
         {
           !loading && selectedCity != null &&
 
-          <Weather currentForecast={currentForecast} fontColor={fontColor} />
+          <Weather currentForecast={currentForecast} mainColor={mainColor} />
 
         }
       </View>
@@ -288,16 +297,19 @@ const s = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#000000",
     paddingVertical: 0,
 
   },
 
   topContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+
 
   },
 
   dateContainer: {
+
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -306,7 +318,7 @@ const s = StyleSheet.create({
     width: "100%",
   },
   dateString: {
-    color: fontColor,
+    color: mainColor,
     fontSize: 38,
     fontFamily: 'digital-7-mono-italic',
     textAlign: "center",
@@ -350,9 +362,9 @@ const s = StyleSheet.create({
 
   },
   numbers: {
-    paddingLeft:7,
+    paddingLeft: 7,
     fontSize: 240,
-    color: fontColor,
+    color: mainColor,
     transform: [{ rotate: '0deg' }],
     textAlign: "center",
     fontFamily: 'digital-7-mono-italic',
@@ -365,7 +377,7 @@ const s = StyleSheet.create({
     fontSize: 70,
     paddingBottom: 10,
     alignSelf: "flex-end",
-    color: fontColor,
+    color: mainColor,
     transform: [{ rotate: '0deg' }],
     textAlign: "center",
     fontFamily: 'digital-7-mono-italic',
@@ -376,7 +388,7 @@ const s = StyleSheet.create({
   dots: {
     textAlign: "center",
     fontSize: 120,
-    color: fontColor,
+    color: mainColor,
     paddingHorizontal: 12
   },
   brightnessContainer: {
@@ -388,6 +400,7 @@ const s = StyleSheet.create({
     left: 0,
   },
   brightnessButton: {
+
     width: "50%",
     height: "100%",
     borderRadius: 0,

@@ -23,14 +23,14 @@ const DayOverview = ({ dayData }) => {
 
     const arr = [
 
-        { time: "00:00", text: "" },
+        // { time: "00:00", text: "" },
         { time: "03:00", text: "" },
-        { time: "06:00", text: "" },
+        { time: "06:00", text: "Mañana" },
         { time: "09:00", text: "" },
-        { time: "12:00", text: "" },
-        { time: "15:00", text: "" },
+        { time: "12:00", text: "Mediodia" },
+        { time: "15:00", text: "Tarde" },
         { time: "18:00", text: "" },
-        { time: "21:00", text: "" },
+        { time: "21:00", text: "Noche" },
 
     ]
 
@@ -46,7 +46,7 @@ const DayOverview = ({ dayData }) => {
         arr.forEach((elem, i) => {
 
             let data = dayData.weather.find(item => item["@_from"].split("T")[1] === elem.time)
-            
+
 
 
             if (data != undefined)
@@ -69,9 +69,9 @@ const DayOverview = ({ dayData }) => {
 
     return (
 
-        <TouchableNativeFeedback onPress={() => { setToggleCurrent(!toggleCurrent) }}>
+        <TouchableRipple style={{ width: "100%" }} onPress={() => { setToggleCurrent(!toggleCurrent) }}>
 
-            <View style={s.container} >
+            <View style={[s.container, {paddingBottom:toggleCurrent || toggleDetails?8:0}]} >
 
                 {
                     groups &&
@@ -97,22 +97,24 @@ const DayOverview = ({ dayData }) => {
                         </View>
 
                         {/* <View style={[s.groupContainer, { display: (!toggleDetails ? "none" : (toggleCurrent ? "flex" : "none")) }]}> */}
-                        <View style={[s.groupContainer, { display: (toggleCurrent ? "flex" : (toggleDetails ? "flex" : "none")) }]}>
-                            {
-                                groups.map((group, i) => (
-                                    <View style={[s.hour, { borderTopWidth: (i < groups.length ? 1 : 0) }]} key={i}>
+                        <ScrollView horizontal>
+                            <View style={[s.groupContainer, { display: (toggleCurrent ? "flex" : (toggleDetails ? "flex" : "none")) }]}>
+                                {
+                                    groups.map((group, i) => (
+                                        <View style={[s.hour, { borderTopWidth: (i < groups.length ? 1 : 0) }]} key={i}>
 
-                                        <Text style={s.dayTime}>{group.time} <Text style={s.hs} >hs</Text> </Text>
-                                        <Text style={s.temp}>{Math.round(group.data.temperature["@_value"])}°</Text>
-                                        <Text style={s.description}>{group.data.symbol["@_name"]}</Text>
-                                        <Text style={s.wind}>{group.data.windDirection["@_name"].split(" del ")[0]}  {group.data.windDirection["@_code"][0]}</Text>
-                                        <Text style={s.hourPrecipitation}>
-                                            {group.data.precipitation["@_value"] != "0.0" && group.data.precipitation["@_value"] + "mm"}
-                                        </Text>
-                                    </View>
-                                ))
-                            }
-                        </View>
+                                            <Text style={s.dayTime}>{group.time}</Text>
+                                            <Text style={s.temp}>{Math.round(group.data.temperature["@_value"])}°</Text>
+                                            <Text style={s.description}>{group.data.symbol["@_name"]}</Text>
+                                            <Text style={s.wind}>{group.data.windDirection["@_name"].split(" del ")[0]}  {group.data.windDirection["@_code"][0]}</Text>
+                                            <Text style={s.hourPrecipitation}>
+                                                {group.data.precipitation["@_value"] != "0.0" && group.data.precipitation["@_value"] + "mm"}
+                                            </Text>
+                                        </View>
+                                    ))
+                                }
+                            </View>
+                        </ScrollView>
 
                     </>
                 }
@@ -122,7 +124,8 @@ const DayOverview = ({ dayData }) => {
 
 
             </View>
-        </TouchableNativeFeedback>
+        </TouchableRipple>
+
     )
 }
 
@@ -132,20 +135,21 @@ const s = StyleSheet.create({
     container: {
         display: "flex",
         flexDirection: "column",
-        gap: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderRadius: 4,
+        gap: 0,
+
         borderWidth: 1,
-        borderColor: "#2c2c2c",
+        borderColor: "#141414",
         backgroundColor: "#1c1c1c",
-        minWidth: "100%",
+
+
     },
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-
+        paddingVertical: 7,
+        paddingHorizontal: 10,
+        // backgroundColor:"rgb(22, 22, 22)"
     },
 
     title: {
@@ -160,31 +164,39 @@ const s = StyleSheet.create({
 
     },
     wind: {
-        fontSize: 16,
+        fontSize: 14,
         color: "gray",
         textAlign: "center",
 
     },
     hour: {
-        flexDirection: "row",
+        flexDirection: "column",
+        justifyContent:"space-between",
         alignItems: "center",
-        gap: 20,
-        // backgroundColor:"black",
+        alignSelf:"stretch",
+        gap: 5,
+        backgroundColor:"rgb(14, 14, 14)",
+        paddingHorizontal:10,
+        paddingVertical:0,
+        textAlign:"center",
         borderColor: "#2c2c2c",
-        paddingLeft: 5,
-        paddingVertical: 2,
-
+        paddingTop:10,
+        paddingHorizontal:20,
+        width:150
     },
     temp: {
         color: "#efefef",
-        fontSize: 28,
+        fontSize: 33,
         fontWeight: "bold",
         textAlign: "center",
         minWidth: 40,
     },
     groupContainer: {
-        flexDirection: "column",
-        gap: 2,
+        flexDirection: "row",
+        gap: 3,
+        width:"50%",
+        
+        paddingHorizontal:8
 
     },
     img: {
@@ -209,20 +221,21 @@ const s = StyleSheet.create({
         gap: 7
     },
     maxMin: {
-        fontSize: 27,
+        fontSize: 30,
 
         fontWeight: "500",
     },
     min: {
 
-        color: "#161efa",
+        color: "rgb(22 48 250)",
     },
     max: {
         color: "#ff3b3b",
     },
     precipitation: {
         color: "aqua",
-        paddingRight: 12
+        paddingRight: 12,
+        
 
     },
     bottomText: {
@@ -230,7 +243,7 @@ const s = StyleSheet.create({
         color: "grey",
         // backgroundColor:"orange",
         minWidth: 36,
-        textAlign: "center"
+        textAlign: "center",
     },
     drops: {
         flexDirection: "row",
@@ -239,11 +252,12 @@ const s = StyleSheet.create({
     },
     hourPrecipitation: {
         color: "aqua",
-        fontSize: 13
+        fontSize: 13,
+        paddingBottom:4
     },
-    hs:{
-        fontSize:13,
-        color:"rgb(32, 185, 32)"
+    hs: {
+        fontSize: 13,
+        color: "rgb(32, 185, 32)"
     }
 
 })

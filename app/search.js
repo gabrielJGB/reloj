@@ -11,7 +11,7 @@ import { useStateContext } from '../context/StateProvider'
 const SearchPage = () => {
   const { back } = useRouter()
   const textInput = useRef()
-  const { setSelectedCity } = useStateContext()
+  const { setSelectedCity ,mainColor} = useStateContext()
   const [text, setText] = useState("");
   const [results, setResults] = useState([])
   const [cityCodes, setCityCodes] = useState(false)
@@ -57,8 +57,7 @@ const SearchPage = () => {
   useFocusEffect(useCallback(() => {
 
 
-    
-    
+    textInput.current.focus()
     _getCityCodes()
 
 
@@ -76,7 +75,7 @@ const SearchPage = () => {
           ref={textInput}
           label="Buscar una ciudad"
           value={text.toLowerCase()}
-          activeUnderlineColor="red"
+          activeUnderlineColor={mainColor}
           left={<TextInput.Icon icon="arrow-left" color="grey" onPress={() => back()} />}
           style={{ backgroundColor: "#121212" }}
           textColor='white'

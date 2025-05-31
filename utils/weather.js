@@ -48,7 +48,8 @@ export const agruparPorDia = (data) => {
 
 export const  formatearFecha = (fechaString) => {
     const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
 
     const fecha = new Date(fechaString);
     const hoy = new Date();
@@ -58,17 +59,19 @@ export const  formatearFecha = (fechaString) => {
     const diferenciaDias = diferenciaMs / (1000 * 60 * 60 * 24);
 
     const diaSemana = diasSemana[fecha.getDay()];
-    const diaMes = fecha.getDate();
-    const mes = String(fecha.getMonth()+1)
+    const diaMes = String(fecha.getDate());
+    const mes = String(fecha.getMonth())
+
+    const stringDate = `${diaSemana} ${diaMes.padStart(2,0)}/${mes.padStart(2,0)}`
 
     if (diferenciaDias === 0) {
-        return `Hoy, ${diaSemana.toLowerCase()} ${diaMes}/${mes.padStart(2,0)}`;
+        return `Hoy, ${stringDate}`;
     } else if (diferenciaDias === -1) {
-        return `Ayer, ${diaSemana.toLowerCase()} ${diaMes}/${mes.padStart(2,0)}`;
+        return `Ayer, ${stringDate}`;
     } else if (diferenciaDias === 1) {
-        return `Mañana, ${diaSemana.toLowerCase()} ${diaMes}/${mes.padStart(2,0)}`;
+        return `Mañana, ${stringDate}`;
     } else {
-        return `${diaSemana} ${diaMes}/${mes.padStart(2,0)}`; 
+        return stringDate 
     }
 }
 

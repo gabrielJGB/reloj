@@ -11,8 +11,10 @@ import WeatherHeader from '../components/WeatherHeader';
 const Layout = () => {
 
     const [selectedCity, setSelectedCity] = useState(null)
-    const [toggleDetails, setToggleDetails] = useState(true)
- 
+    const [toggleDetails, setToggleDetails] = useState(false)
+    const [roundTemp, setRoundTemp] = useState(true) 
+    const [mainColor, setMainColor] = useState("red")
+
     const [increaseBrightness, setIncreaseBrightness] = useState({
         level: 70,
         hour: 7,
@@ -45,7 +47,9 @@ const Layout = () => {
 
         hideUI()
         hideUI()
-        
+
+
+
 
 
 
@@ -56,7 +60,7 @@ const Layout = () => {
     return (
 
 
-        <StateProvider value={{ selectedCity, setSelectedCity, toggleDetails, setToggleDetails, increaseBrightness, setIncreaseBrightness,decreaseBrightness, setDecreaseBrightness }}>
+        <StateProvider value={{ selectedCity, setSelectedCity, toggleDetails, setToggleDetails, increaseBrightness, setIncreaseBrightness, decreaseBrightness, setDecreaseBrightness, roundTemp, setRoundTemp, mainColor, setMainColor }}>
             <ThemeProvider value={DarkTheme}>
                 <StatusBar hidden />
                 <Stack
@@ -69,6 +73,7 @@ const Layout = () => {
                     <Stack.Screen name='index' options={{ headerShown: false }} />
                     <Stack.Screen name='settings' options={{ headerShown: true, headerTitle: "Configuración" }} />
                     <Stack.Screen name='search' options={{ headerShown: false, headerTitle: "Buscar" }} />
+                    <Stack.Screen name='options' options={{ headerShown: true, headerTitle: "Seleccionar color" }} />
                     <Stack.Screen name='weather' options={{ header: () => <WeatherHeader /> }} />
                     <Stack.Screen name='brightnessSettings' options={{ headerTitle: "Programar brillo de pantalla" }} />
 

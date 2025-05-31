@@ -5,6 +5,7 @@ import { ActivityIndicator } from 'react-native-paper'
 import { agruparPorDia, formatearFecha } from '../utils/weather'
 import { fetchXML } from '../utils/fetch'
 import DayOverview from '../components/DayOverview'
+import { useStateContext } from '../context/StateProvider'
 
 const WeatherScreen = () => {
 
@@ -14,13 +15,13 @@ const WeatherScreen = () => {
     const [dailyForecast, setDailyForecast] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-    const [saveIcon, setSaveIcon] = useState("star-outline")
-    
+    const { toggleDetails } = useStateContext()
+
     const meteogramUrl = `https://meteobahia.com.ar/scripts/meteogramas/${selectedCity}.xml`
 
 
     useFocusEffect(useCallback(() => {
-        console.log(selectedCity);
+        
         
 
         setLoading(true)
@@ -62,8 +63,8 @@ const WeatherScreen = () => {
 
     return (
 
-        <ScrollView>
-            <View style={s.overviewContainer}>
+        <ScrollView >
+            <View style={[s.overviewContainer]}>
                 {
                     dailyForecast &&
                     dailyForecast.map((dayData, i) => (
@@ -83,13 +84,14 @@ const s = StyleSheet.create({
         color: "white"
     },
     overviewContainer: {
+        flex:1,
         display: "flex",
         flexDirection: "column",
-        paddingVertical: 15,
-        paddingLeft: 10,
-        paddingRight: 60,
-        gap: 12,
+        paddingVertical: 50,
+        paddingHorizontal: 60,
+        gap: 3,
         width: "100%",
+        
 
     },
 })
