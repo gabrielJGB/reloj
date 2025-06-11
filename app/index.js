@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import { Button, Platform, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -34,11 +34,11 @@ export default function App() {
   const [seconds, setSeconds] = useState('--')
   const [toggleDot, setToggleDot] = useState(false)
   const [dateString, setDateString] = useState(formatDate(new Date()))
-  const { selectedCity, setSelectedCity, mainColor, setMainColor } = useStateContext()
+  const { selectedCity, setSelectedCity, mainColor, setMainColor, serverIP, setServerIP } = useStateContext()
   const [loading, setLoading] = useState(true);
   const [currentForecast, setCurrentForecast] = useState(false)
+  const [brightness, setBrightness] = useState(1);
 
-  const [brightness, setBrightness] = useState(1); // valor inicial por defecto
 
   const [loaded] = useFonts({
     'digital-7': require('../assets/fonts/digital-7.ttf'),
@@ -47,6 +47,8 @@ export default function App() {
   });
 
   const [originalBrightness, setOriginalBrightness] = useState(null);
+
+
 
   useEffect(() => {
 
@@ -62,9 +64,9 @@ export default function App() {
     init();
 
 
-    scheduleBrightnessChange(7, 25, 0.8)
-    scheduleBrightnessChange(8, 25, 0.5)
-    scheduleBrightnessChange(0, 30, 0.1)
+    // scheduleBrightnessChange(7, 25, 0.8)
+    // scheduleBrightnessChange(8, 25, 0.5)
+    // scheduleBrightnessChange(0, 30, 0.1)
 
   }, []);
 
@@ -153,7 +155,7 @@ export default function App() {
   const changeBrightness = async (delta) => {
     let newBrightness = brightness + delta;
 
-    
+
     newBrightness = Math.min(1, Math.max(0, newBrightness));
 
     await Brightness.setBrightnessAsync(newBrightness);
@@ -171,7 +173,7 @@ export default function App() {
 
       _fetchCityWeather()
 
-    }, 1000 * 60 * 5);
+    }, 1000 * 60 * 8);
 
     return () => clearInterval(interval)
 
@@ -210,7 +212,7 @@ export default function App() {
 
 
 
-//change &&
+      //change &&
       if (change && date.getHours() === 16 && (date.getMinutes() > 14)) {
         await Brightness.setBrightnessAsync(1)
 
@@ -222,11 +224,48 @@ export default function App() {
   }, []))
 
 
+
+
+
+  const connectWebSocket = () => {
+    const ws = new WebSocket(`ws://${serverIP}:8080`);
+
+    ws.onopen = () => {
+      console.log('✅ Conectado al servidor');
+    };
+
+    ws.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.type === 'brightness') {
+        Brightness.setBrightnessAsync(msg.value);
+        setBrightness(msg.value)
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('🔁 Conexión cerrada, intentando reconectar...');
+      setTimeout(connectWebSocket, 3000);
+    };
+
+    ws.onerror = (e) => {
+      console.log('⚠️ Error WebSocket:', e.message);
+      ws.close();
+    };
+  };
+
+
+
+  useEffect(() => {
+    connectWebSocket();
+
+  }, [serverIP]);
+
+
   if (!loaded) {
     return <Text>--</Text>
   }
 
-  // 
+
 
   return (
     <View style={s.mainContainer}>
@@ -235,23 +274,13 @@ export default function App() {
 
       <View style={s.brightnessContainer}>
 
-        {/* <TouchableRipple onPress={() => { changeBrightness(-0.1) }}>
+        <TouchableNativeFeedback onPress={() => changeBrightness(-0.1)}>
           <View style={s.brightnessButton}></View>
-        </TouchableRipple> */}
+        </TouchableNativeFeedback>
 
-        <TouchableNativeFeedback
-          onPress={() => { changeBrightness(-0.1) }}
-
-        ><View style={s.brightnessButton}></View></TouchableNativeFeedback>
-
-        <TouchableNativeFeedback
-          onPress={() => { changeBrightness(0.1) }}
-
-        ><View style={s.brightnessButton}></View></TouchableNativeFeedback>
-
-        {/* <TouchableRipple onPress={() => { changeBrightness(0.1) }}>
+        <TouchableNativeFeedback onPress={() => changeBrightness(0.1)}>
           <View style={s.brightnessButton}></View>
-        </TouchableRipple> */}
+        </TouchableNativeFeedback>
 
       </View>
 
@@ -260,7 +289,7 @@ export default function App() {
 
         <View style={s.dateContainer}>
           <IconButton iconColor={mainColor} icon="cog" onPress={() => { push("settings") }} />
-          <Text style={[s.dateString,{color:mainColor,textShadowColor:mainColor}]}>{dateString}</Text>
+          <Text style={[s.dateString, { color: mainColor, textShadowColor: mainColor }]}>{dateString}</Text>
           <View></View>
         </View>
 
@@ -353,16 +382,16 @@ const s = StyleSheet.create({
   },
 
   clock: {
-    textAlign: "left",
+    textAlign: "center",
     width: "100%",
     display: "flex",
     flexDirection: "row",
     alignItems: 'center',
-    justifyContent: 'flex-start',
-
+    justifyContent: 'center',
+    paddingRight: 20
   },
   numbers: {
-    paddingLeft: 7,
+
     fontSize: 240,
     color: mainColor,
     transform: [{ rotate: '0deg' }],
@@ -374,7 +403,8 @@ const s = StyleSheet.create({
   },
   seconds: {
 
-    fontSize: 70,
+    fontSize: 80,
+    paddingLeft:10,
     paddingBottom: 10,
     alignSelf: "flex-end",
     color: mainColor,

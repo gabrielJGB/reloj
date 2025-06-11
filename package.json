@@ -26,15 +26,14 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
-    
-    
     "react-native-paper": "^5.14.4",
-    
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
-    "react-native-webview": "13.13.5"
+    "react-native-websocket": "^1.0.2",
+    "react-native-webview": "13.13.5",
+    "expo-system-ui": "~5.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

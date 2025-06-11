@@ -57,7 +57,7 @@ const SearchPage = () => {
   useFocusEffect(useCallback(() => {
 
 
-    textInput.current.focus()
+    // textInput.current.focus()
     _getCityCodes()
 
 

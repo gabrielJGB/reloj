@@ -24,6 +24,7 @@ const DayOverview = ({ dayData }) => {
     const arr = [
 
         // { time: "00:00", text: "" },
+        { time: "00:00", text: "" },
         { time: "03:00", text: "" },
         { time: "06:00", text: "Mañana" },
         { time: "09:00", text: "" },
@@ -97,7 +98,7 @@ const DayOverview = ({ dayData }) => {
                         </View>
 
                         {/* <View style={[s.groupContainer, { display: (!toggleDetails ? "none" : (toggleCurrent ? "flex" : "none")) }]}> */}
-                        <ScrollView horizontal>
+                        
                             <View style={[s.groupContainer, { display: (toggleCurrent ? "flex" : (toggleDetails ? "flex" : "none")) }]}>
                                 {
                                     groups.map((group, i) => (
@@ -114,7 +115,7 @@ const DayOverview = ({ dayData }) => {
                                     ))
                                 }
                             </View>
-                        </ScrollView>
+                        
 
                     </>
                 }
@@ -136,7 +137,6 @@ const s = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         gap: 0,
-
         borderWidth: 1,
         borderColor: "#141414",
         backgroundColor: "#1c1c1c",
@@ -148,7 +148,8 @@ const s = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingVertical: 7,
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
+        paddingRight:40,
         // backgroundColor:"rgb(22, 22, 22)"
     },
 
@@ -170,31 +171,29 @@ const s = StyleSheet.create({
 
     },
     hour: {
-        flexDirection: "column",
-        justifyContent:"space-between",
+        flexDirection: "row",
+        justifyContent:"flex-start",
         alignItems: "center",
         alignSelf:"stretch",
-        gap: 5,
-        backgroundColor:"rgb(14, 14, 14)",
-        paddingHorizontal:10,
-        paddingVertical:0,
+        gap: 20,
+        paddingHorizontal:20,        
         textAlign:"center",
-        borderColor: "#2c2c2c",
-        paddingTop:10,
-        paddingHorizontal:20,
-        width:150
+        backgroundColor:"rgb(14, 14, 14)",
+        
+        
     },
     temp: {
         color: "#efefef",
         fontSize: 33,
         fontWeight: "bold",
         textAlign: "center",
-        minWidth: 40,
+        minWidth:60,
+        
     },
     groupContainer: {
-        flexDirection: "row",
+        flexDirection: "column",
         gap: 3,
-        width:"50%",
+        
         
         paddingHorizontal:8
 
@@ -218,7 +217,7 @@ const s = StyleSheet.create({
         color: "grey",
         flexDirection: "row",
         alignItems: "center",
-        gap: 7
+        gap: 7,
     },
     maxMin: {
         fontSize: 30,

@@ -22,8 +22,6 @@ const WeatherScreen = () => {
 
     useFocusEffect(useCallback(() => {
         
-        
-
         setLoading(true)
         fetchXML(meteogramUrl)
             .then(res => {
@@ -47,6 +45,13 @@ const WeatherScreen = () => {
             .finally(() => setLoading(false))
 
     }, []))
+
+
+
+
+
+
+    
 
     if (loading)
         return (
@@ -87,10 +92,9 @@ const s = StyleSheet.create({
         flex:1,
         display: "flex",
         flexDirection: "column",
-        paddingVertical: 50,
-        paddingHorizontal: 60,
         gap: 3,
         width: "100%",
+        marginTop:3
         
 
     },

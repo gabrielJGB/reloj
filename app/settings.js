@@ -15,7 +15,7 @@ const Settings = () => {
   const [cityCode, setCityCode] = useState("")
   const [cityName, setCityName] = useState("")
   const [showModal, setShowModal] = useState(false);
-  const { roundTemp, setRoundTemp, setMainColor, mainColor } = useStateContext()
+  const { roundTemp, setRoundTemp, setMainColor, mainColor,serverIP, setServerIP } = useStateContext()
 
   useFocusEffect(useCallback(() => {
 
@@ -81,10 +81,14 @@ const Settings = () => {
       </TouchableHighlight>
 
 
-      {/* <ColorPicker
-        onColorSelected={color => setMainColor(color)}
-        style={{ flex: 1 }}
-      /> */}
+      <TouchableHighlight onPress={() => {
+        push("ipSettings")
+
+      }}>
+        <View style={s.option}>
+          <Text style={s.text}>IP Servidor: {serverIP}</Text>
+        </View>
+      </TouchableHighlight>
 
     </View>
   )
@@ -112,9 +116,9 @@ const s = StyleSheet.create({
     fontSize: 17
   },
   option: {
-    flexDirection:"row",
-    alignItems:"center",
-    gap:5,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
     paddingVertical: 20,
     paddingHorizontal: 12,
     borderBottomWidth: 1,
