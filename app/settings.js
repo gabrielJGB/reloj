@@ -79,17 +79,7 @@ const Settings = () => {
 
         </View>
       </TouchableHighlight>
-
-
-      <TouchableHighlight onPress={() => {
-        push("ipSettings")
-
-      }}>
-        <View style={s.option}>
-          <Text style={s.text}>IP Servidor: {serverIP}</Text>
-        </View>
-      </TouchableHighlight>
-
+ 
     </View>
   )
 }

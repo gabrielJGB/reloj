@@ -17,7 +17,7 @@ const formatDate = (date) => {
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
+  ]; 
 
   const dayName = days[date.getDay()];
   const dayNumber = date.getDate();
@@ -46,56 +46,24 @@ export default function App() {
     'digital-7-mono-italic': require('../assets/fonts/digital-7-mono-italic.ttf'),
   });
 
-  const [originalBrightness, setOriginalBrightness] = useState(null);
-
 
 
   useEffect(() => {
 
     // push("weather")
+    
     const init = async () => {
       const { granted } = await Brightness.requestPermissionsAsync();
       if (granted) {
         const current = await Brightness.getBrightnessAsync();
-        setOriginalBrightness(current);
+        
       }
     };
 
     init();
 
 
-    // scheduleBrightnessChange(7, 25, 0.8)
-    // scheduleBrightnessChange(8, 25, 0.5)
-    // scheduleBrightnessChange(0, 30, 0.1)
-
   }, []);
-
-
-
-
-
-  const scheduleBrightnessChange = (hour, minute, targetBrightness) => {
-    const now = new Date();
-    const target = new Date();
-    target.setHours(hour, minute, 0, 0);
-
-
-    if (now > target) {
-      target.setDate(target.getDate() + 1);
-    }
-
-    const msUntilTarget = target.getTime() - now.getTime();
-
-    setTimeout(async () => {
-      if (originalBrightness !== null) {
-        await Brightness.setBrightnessAsync(targetBrightness);
-        console.log(`Brillo cambiado a ${targetBrightness * 100}% a las ${hour}:${minute}`);
-      }
-    }, msUntilTarget);
-
-
-  };
-
 
 
 
@@ -212,8 +180,8 @@ export default function App() {
 
 
 
-      //change &&
-      if (change && date.getHours() === 16 && (date.getMinutes() > 14)) {
+      
+      if (date.getHours() === 16 && (date.getMinutes() > 14)) {
         await Brightness.setBrightnessAsync(1)
 
       }
@@ -223,42 +191,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, []))
 
-
-
-
-
-  const connectWebSocket = () => {
-    const ws = new WebSocket(`ws://${serverIP}:8080`);
-
-    ws.onopen = () => {
-      console.log('✅ Conectado al servidor');
-    };
-
-    ws.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      if (msg.type === 'brightness') {
-        Brightness.setBrightnessAsync(msg.value);
-        setBrightness(msg.value)
-      }
-    };
-
-    ws.onclose = () => {
-      console.log('🔁 Conexión cerrada, intentando reconectar...');
-      setTimeout(connectWebSocket, 3000);
-    };
-
-    ws.onerror = (e) => {
-      console.log('⚠️ Error WebSocket:', e.message);
-      ws.close();
-    };
-  };
-
-
-
-  useEffect(() => {
-    connectWebSocket();
-
-  }, [serverIP]);
 
 
   if (!loaded) {

@@ -12,9 +12,9 @@ const Layout = () => {
 
     const [selectedCity, setSelectedCity] = useState(null)
     const [toggleDetails, setToggleDetails] = useState(false)
-    const [roundTemp, setRoundTemp] = useState(true) 
+    const [roundTemp, setRoundTemp] = useState(true)
     const [mainColor, setMainColor] = useState("red")
-const [serverIP, setServerIP] = useState("192.168.100.28")
+    const [serverIP, setServerIP] = useState("192.168.100.28")
 
     const [increaseBrightness, setIncreaseBrightness] = useState({
         level: 70,
@@ -76,8 +76,7 @@ const [serverIP, setServerIP] = useState("192.168.100.28")
                     <Stack.Screen name='search' options={{ headerShown: false, headerTitle: "Buscar" }} />
                     <Stack.Screen name='options' options={{ headerShown: true, headerTitle: "Seleccionar color" }} />
                     <Stack.Screen name='weather' options={{ header: () => <WeatherHeader /> }} />
-                    <Stack.Screen name='brightnessSettings' options={{ headerTitle: "Programar brillo de pantalla" }} />
-                    <Stack.Screen name='ipSettings' options={{ headerTitle: "IP del servidor" }} />
+
 
                 </Stack>
             </ThemeProvider>
